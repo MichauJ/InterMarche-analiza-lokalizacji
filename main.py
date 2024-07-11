@@ -13,5 +13,11 @@ if os.path.isfile(os.getcwd()+'/Dane/Strona html z listą sklepów Intermarche.h
 
 sklepy = wczytaj_i_oczysc_html(os.getcwd()+'/Dane/Strona html z listą sklepów Intermarche.html')
 df = stworz_df(sklepy)
-df.to_excel(os.getcwd()+'/Dane/'+'Sklepy Intermarche.xlsx')
+try:
+    df.to_excel(os.getcwd()+'/Dane/'+'Sklepy Intermarche.xlsx')
+    print(f"Utworzone plik excel w {os.getcwd()+'/Dane/'+'Sklepy Intermarche.xlsx'}.")
+except Exception as e:
+    print(f'Błąd: {e}')
+
+
 
