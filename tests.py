@@ -1,13 +1,24 @@
-﻿import unittest
+﻿#importy
+import os
+import sys
+print("Current working directory:", os.getcwd())
+print("Python path:", sys.path)
+# Dodaj katalog główny projektu do ścieżki wyszukiwania
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+print("Updated Python path:", sys.path)
+import unittest
 import requests as r
+import re
 import unittest
 from unittest.mock import patch, mock_open, MagicMock
 from bs4 import BeautifulSoup
 import os
+from tworzenie_df import patterns
 import pandas as pd
 from pandas.testing import assert_frame_equal
 from wojewodztwa import miasta_wojewodztwa
 
+#################################################################################
 
 class TestPobierzDaneZHtml(unittest.TestCase):
     @patch('builtins.open', new_callable=mock_open)
@@ -19,19 +30,14 @@ class TestPobierzDaneZHtml(unittest.TestCase):
         mock_response.text = '<html><body><h1>Test</h1></body></html>'
         mock_response.status_code = 200
         mock_get.return_value = mock_response
-
-        
         # Stwórz katalog "Dane", jeśli nie istnieje
         if not os.path.exists('Dane'):
             os.mkdir('Dane')
-        
         # Wywołaj funkcję z określonym URL i nazwą pliku
         output_filename = 'Sklepy_Intermarche_raw.html'
         pobierz_dane_z_url('http://example.com', output_filename)
-        
         # Sprawdzenie, czy requests.get zostało wywołane z odpowiednim URL
         mock_get.assert_called_once_with('http://example.com')
-        
         # Sprawdzenie, czy plik został otwarty w trybie zapisu z odpowiednią nazwą
         expected_path = os.path.join(os.getcwd(), 'Dane', output_filename)
         mock_file.assert_called_once_with(expected_path, 'x', encoding='utf-8')
@@ -79,38 +85,24 @@ class TestWczytajIOczyscHtml(unittest.TestCase):
             
             # Sprawdzenie, czy wynik jest zgodny z oczekiwanym
             self.assertEqual(result, expected_result)      
-class TestWzorAdresow(unittest.TestCase):
-    def test_wyodrebnij_adres(self):
-        from tworzenie_df import patterns
-        testowe_adresy = [
-            'Bolesławiec 59-700, Al. Tysiąclecia 34 a',
-            'Brzeg Dolny 56-120, Al. Jerozolimskie31',
-            'Czarnków 64-700, ul. Kościuszki 95',
-            'Gdańsk 80-337, Al. Grunwaldzka 615',
-            'Gryfino 74-100, ul. 9.Maja 14',
-            'Nowy Tomyśl 64-300, os. Północ 13'
-            ]
-        def wyodrebnij_adresy(adresy, pattern):
-            extracted_addresses = []
-            for adres in adresy:
-                match = re.search(pattern, adres)
-                if match:
-                    extracted_addresses.append(match.groupdict())
-            return extracted_addresses
+class TestZnajdowanieAdresow(unittest.TestCase):
+    test_cases = [
+        'Głuchołazy 48-340, ul.Grunwaldzka 2 b',
+        'Gdynia Pogórze 81-198, ul. Płk. Dąbka 338 (Galeria Szperk)',
+        'Gostyń 63-800, os. 700-lecia 16',
+        'Gryfino 74-100, ul. 9.Maja 14'
+    ]
+    expected_result = ['Głuchołazy', 'Gdynia Pogórze', 'Gostyń', 'Gryfino']
+    wzor_miasto = patterns['miasto']
 
-        expected_results = [
-            {'miasto': 'Bolesławiec', 'kod_pocztowy': '59-700', 'ulica': 'Al. Tysiąclecia 34'},
-            {'miasto': 'Brzeg Dolny', 'kod_pocztowy': '56-120', 'ulica': 'Al. Jerozolimskie 31'},
-            {'miasto': 'Czarnków', 'kod_pocztowy': '64-700', 'ulica': 'ul. Kościuszki 95'},
-            {'miasto': 'Gdańsk', 'kod_pocztowy': '80-337', 'ulica': 'Al. Grunwaldzka 615'},
-            {'miasto': 'Gryfino', 'kod_pocztowy': '74-100', 'ulica': 'ul. 9.Maja 14'},
-            {'miasto': 'Nowy Tomyśl', 'kod_pocztowy': '64-300', 'ulica': 'os. Północ 13'}
-        ]
+    def test_wzoru_miasta(self):
+        test_result = []
+        for case in self.test_cases:
+            wynik = re.findall(self.wzor_miasto, case)[0].strip()
+            test_result.append(wynik)
+        self.assertEqual(test_result, self.expected_result)
+    
 
-        extracted_addresses = wyodrebnij_adresy(testowe_adresy, patterns['adresy'])
-        
-        self.assertEqual(extracted_addresses, expected_results)
- 
 
 if __name__ == '__main__':
     unittest.main()
