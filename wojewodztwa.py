@@ -173,3 +173,21 @@
     'Zielona Góra': 'lubuskie',
     'Złocieniec': 'zachodniopomorskie'
 }
+wojewodztwa_lokalizacje = {
+    'dolnośląskie': {'lat': 51.1079, 'lon': 17.0385},  # Wrocław
+    'kujawsko-pomorskie': {'lat': 53.1235, 'lon': 18.0076},  # Bydgoszcz
+    'lubelskie': {'lat': 51.2465, 'lon': 22.5684},  # Lublin
+    'lubuskie': {'lat': 52.7394, 'lon': 15.2370},  # Zielona Góra
+    'łódzkie': {'lat': 51.7592, 'lon': 19.4560},  # Łódź
+    'małopolskie': {'lat': 50.0647, 'lon': 19.9450},  # Kraków
+    'mazowieckie': {'lat': 52.2297, 'lon': 21.0122},  # Warszawa
+    'opolskie': {'lat': 50.6751, 'lon': 17.9213},  # Opole
+    'podkarpackie': {'lat': 50.0413, 'lon': 21.9990},  # Rzeszów
+    'podlaskie': {'lat': 53.1325, 'lon': 23.1688},  # Białystok
+    'pomorskie': {'lat': 54.3520, 'lon': 18.6466},  # Gdańsk
+    'śląskie': {'lat': 50.2649, 'lon': 19.0238},  # Katowice
+    'świętokrzyskie': {'lat': 50.8661, 'lon': 20.6286},  # Kielce
+    'warmińsko-mazurskie': {'lat': 53.7799, 'lon': 20.4942},  # Olsztyn
+    'wielkopolskie': {'lat': 52.4064, 'lon': 16.9252},  # Poznań
+    'zachodniopomorskie': {'lat': 53.4285, 'lon': 14.5528}  # Szczecin
+}

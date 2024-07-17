@@ -15,7 +15,8 @@ def pobierz_dane_z_url(url, output_filename='Sklepy_Intermarche_raw.html')-> str
     print(f"Status:{html} ")
     html_text = html.text
     lokalizacja_pliku_html = os.getcwd()+'\\Dane\\'+output_filename
-    with open(lokalizacja_pliku_html, 'x', encoding= 'utf-8') as html_file:
+    os.makedirs('Dane')
+    with open(lokalizacja_pliku_html, 'w', encoding= 'utf-8') as html_file:
         html_file.write(html_text)
     print(f'Pobrano stronę html zawierającą listę sklepów InterMarche i zapisano w {lokalizacja_pliku_html}.')
     

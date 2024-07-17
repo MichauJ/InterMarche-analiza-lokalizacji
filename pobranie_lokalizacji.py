@@ -6,7 +6,7 @@ import re
 from wojewodztwa import miasta_wojewodztwa
 from tworzenie_df import df_sklepy
 from geopy_api_key import api_key
-# Uzyskaj klucz API z OpenCage i zamień 'YOUR_API_KEY' na właściwy klucz
+
 geolocator = OpenCage(api_key)
 
 # Funkcja do pozyskiwania współrzędnych

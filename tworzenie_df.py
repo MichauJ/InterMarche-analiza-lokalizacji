@@ -31,20 +31,25 @@ def stworz_df(sklepy: dict) -> pd.DataFrame:
     df_sklepy['Zamkniecie sb'] = df_sklepy['Sobota'].str.extract(patterns['godziny zamknięcia'])
     df_sklepy['Otwarcie nd'] = df_sklepy['Niedziela'].str.extract(patterns['godziny otwarcia'])
     df_sklepy['Zamkniecie nd'] = df_sklepy['Niedziela'].str.extract(patterns['godziny zamknięcia'])
+
+    #niektóre nazwy są poprawnie łapane przez regex ale niepoprawnie/niestandardowo napisane u źródła, stąd poprawki
     poprawione_miejscowosci  = {
     'Gdynia Pogórze': 'Gdynia',
     'Jelcz Laskowice': 'Jelcz',
     'Kostrzyn n': 'Kostrzyn nad Odrą',
     'Krynica Zdrój': 'Krynica-Zdrój',
     'Polanica Zdrój': 'Polanica-Zdrój',
-    'Swarzędz-Jasin': 'Swarzędz'} #niektóre nazwy są poprawnie łapane przez regex ale niepoprawnie napisane u źródła
+    'Swarzędz-Jasin': 'Swarzędz'} 
     df_sklepy['Miasto'] = df_sklepy['Miasto'].replace(poprawione_miejscowosci)
     df_sklepy['Województwo'] = df_sklepy['Miasto'].map(miasta_wojewodztwa)
     df_sklepy.drop(columns=['Poniedziałek-Piątek', 'Sobota','Niedziela'], inplace=True)
     df_sklepy.dropna(subset='Miasto')
 
     #dodanie lokalizacji
-    from geopy_api_key import api_key
+    try:
+        from geopy_api_key import api_key
+    except FileNotFoundError:
+        print('Pozyskaj klucz api i umieść go w pliku geopy_api_key.py')  #klucz zapisany w osobnym pliku
     geolocator = OpenCage(api_key)
 
     # Funkcja do pozyskiwania współrzędnych
